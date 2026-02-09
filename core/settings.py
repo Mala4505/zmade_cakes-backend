@@ -7,6 +7,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from corsheaders.defaults import default_headers
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,6 +38,7 @@ MIDDLEWARE = [
     "core.middleware.AdminPasswordMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "core.middleware.AdminPasswordMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -106,3 +109,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "x-admin-password", # custom header
+    ]
