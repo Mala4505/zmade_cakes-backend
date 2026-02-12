@@ -1,3 +1,4 @@
+
 # """
 # ZMade Cakes Kuwait – Order Management System
 # Django settings
@@ -6,7 +7,6 @@
 # from pathlib import Path
 
 # from dotenv import load_dotenv
-
 # from corsheaders.defaults import default_headers
 
 # load_dotenv()
@@ -34,8 +34,7 @@
 
 # MIDDLEWARE = [
 #     "django.middleware.security.SecurityMiddleware",
-#     "corsheaders.middleware.CorsMiddleware",
-#     "core.middleware.AdminPasswordMiddleware",
+#     "corsheaders.middleware.CorsMiddleware",  # must be near the top
 #     "django.contrib.sessions.middleware.SessionMiddleware",
 #     "django.middleware.common.CommonMiddleware",
 #     "core.middleware.AdminPasswordMiddleware",
@@ -43,7 +42,6 @@
 #     "django.contrib.auth.middleware.AuthenticationMiddleware",
 #     "django.contrib.messages.middleware.MessageMiddleware",
 #     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-#     "django.middleware.security.SecurityMiddleware",
 # ]
 
 # ROOT_URLCONF = "core.urls"
@@ -65,6 +63,7 @@
 #     },
 # ]
 
+# # Database
 # if os.environ.get("DATABASE_URL"):
 #     import dj_database_url
 #     db_config = dj_database_url.config(
@@ -72,7 +71,7 @@
 #         conn_health_checks=True,
 #     )
 #     if db_config:
-#         db_config.setdefault("OPTIONS", {})["sslmode"] = "require"  # Supabase requires SSL
+#         db_config.setdefault("OPTIONS", {})["sslmode"] = "require"
 #     DATABASES = {"default": db_config}
 # else:
 #     DATABASES = {
@@ -98,8 +97,10 @@
 # TIME_ZONE = "Asia/Kuwait"
 # USE_I18N = True
 # USE_TZ = True
-# STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# STATIC_URL = "/static/"
+# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 # DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # REST_FRAMEWORK = {
@@ -108,11 +109,16 @@
 #     ],
 # }
 
-# CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+# # CORS
+# CORS_ALLOWED_ORIGINS = os.environ.get(
+#     "CORS_ALLOWED_ORIGINS",
+#     "http://localhost:5173,http://127.0.0.1:5173"
+# ).split(",")
 
 # CORS_ALLOW_HEADERS = list(default_headers) + [
-#     "x-admin-password", # custom header
-#     ]
+#     "x-admin-password",  # custom header
+# ]
+
 
 """
 ZMade Cakes Kuwait – Order Management System
@@ -120,6 +126,7 @@ Django settings
 """
 import os
 from pathlib import Path
+from datetime import timedelta
 
 from dotenv import load_dotenv
 from corsheaders.defaults import default_headers
@@ -152,7 +159,6 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # must be near the top
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "core.middleware.AdminPasswordMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -218,10 +224,21 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# REST Framework + JWT
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 # CORS
@@ -230,6 +247,4 @@ CORS_ALLOWED_ORIGINS = os.environ.get(
     "http://localhost:5173,http://127.0.0.1:5173"
 ).split(",")
 
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    "x-admin-password",  # custom header
-]
+CORS_ALLOW_HEADERS = list(default_headers)
