@@ -12,7 +12,11 @@ class Product(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_CHOICES, db_index=True)
 
     base_price = models.DecimalField(max_digits=10, decimal_places=3)
-    flavor = models.CharField(max_length=255, blank=True)  # no null=True
+    flavor = models.CharField(max_length=255, blank=True)
+
+    # New fields added per implementation plan
+    description = models.TextField(blank=True, default='')
+    image_url = models.URLField(max_length=500, blank=True, default='')
 
     active = models.BooleanField(default=True)
 
