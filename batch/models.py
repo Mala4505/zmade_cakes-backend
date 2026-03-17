@@ -69,8 +69,11 @@ class BatchStock(models.Model):
         if self.collected_pieces > self.booked_pieces:
             raise ValidationError("Collected pieces cannot exceed booked pieces.")
 
+    # def save(self, *args, **kwargs):
+    #     self.full_clean()
+    #     super().save(*args, **kwargs)
+    
     def save(self, *args, **kwargs):
-        self.full_clean()
         super().save(*args, **kwargs)
 
     def __str__(self):
